@@ -1,11 +1,21 @@
-from dagster import job, op
-from elastic_ops import index_sample_data
+from dagster import op, job
+
+def read_excel_data(file_path):
+   
+    pass
+
+def push_to_elasticsearch(index, data):
+   
+    pass
 
 @op
-def send_data_to_elasticsearch(context):
-    result = index_sample_data()
-    context.log.info(f"Indexed to ES: {result['_id']}")
+def get_excel_data():
+    return read_excel_data("product_list.xlsx")
+
+@op
+def send_data_to_elasticsearch(data):
+    push_to_elasticsearch("product-list", data)
 
 @job
-def elastic_job():
-    send_data_to_elasticsearch()
+def excel_to_elasticsearch_job():
+    send_data_to_elasticsearch(get_excel_data())
